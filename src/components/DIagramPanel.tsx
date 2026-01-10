@@ -36,7 +36,14 @@ export default function DiagramPanel() {
   }, [schema]);
 
   return (
-    <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      nodeTypes={nodeTypes}
+      snapToGrid
+      snapGrid={[20, 20]}
+      fitView
+    >
       <Background />
       <Controls />
     </ReactFlow>

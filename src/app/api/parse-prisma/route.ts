@@ -30,18 +30,30 @@ export async function POST(req: Request) {
     }));
 
     const edges: any = [];
-    dmmf.datamodel.models.forEach((model: any) => {
-      model.fields.forEach((f: any) => {
-        if (f.relationName) {
+    for (const model of dmmf.datamodel.models) {
+      for (const field of model.fields) {
+        if (field.kind === "enum") {
           edges.push({
-            id: `${model.name}-${f.name}`,
+            id: `${model.name}-${field.name}-enum`,
             source: model.name,
-            target: f.type,
-            animated: true,
+            sourceHandle: `field-${field.name}`,
+            target: field.type,
+            targetHandle: "enum-bottom",
+            type: "smoothstep",
           });
         }
-      });
-    });
+
+        if (field.relationName) {
+          edges.push({
+            id: `${model.name}-${field.name}-rel`,
+            source: model.name,
+            sourceHandle: `field-${field.name}`,
+            target: field.type,
+            type: "smoothstep",
+          });
+        }
+      }
+    }
 
     return NextResponse.json({ nodes: [...nodes, ...enumNodes], edges });
   } catch (e: any) {

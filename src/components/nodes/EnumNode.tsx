@@ -18,7 +18,12 @@ export default function EnumNode({ data }: { data: any }) {
           )
         )}
       </div>
-      <Handle type="source" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="enum-bottom"
+        style={{ bottom: -3 }}
+      />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { Handle, Position } from "reactflow";
+
 export default function ModelNode({ data }: { data: any }) {
   function formatType(field: any) {
     let type = field.type;
@@ -36,12 +38,25 @@ export default function ModelNode({ data }: { data: any }) {
       <div className="p-1 divide-y divide-zinc-600 text-xs">
         {data.fields.map((field: any, index: number) => {
           return (
-            <div className="grid grid-cols-[0.5fr_0.5fr_0.5fr] px-2 py-1" key={index}>
+            <div
+              className="grid grid-cols-[0.5fr_0.5fr_0.5fr] px-2 py-1"
+              key={index}
+            >
+              {(field.relationName || field.kind === "enum") && (
+                <Handle
+                  type="source"
+                  position={Position.Left}
+                  id={`field-${field.name}`}
+                  style={{
+                    top: "50%",
+                    left: 0,
+                    transform: "translate(-50%)",
+                  }}
+                />
+              )}
               <div className="font-medium">{field.name}</div>
               <div className="">{formatType(field)}</div>
-              <div className="text-right">
-                {formatAttributes(field)}
-              </div>
+              <div className="text-right">{formatAttributes(field)}</div>
             </div>
           );
         })}
