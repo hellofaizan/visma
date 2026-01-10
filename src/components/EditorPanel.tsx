@@ -2,11 +2,42 @@
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useSchemaStore } from "@/store/schema";
-import { useEffect } from "react";
-import * as prismaLanguage from "./prismalang";
+import { useEffect, useRef } from "react";
+import * as prismaLanguage from "../lib/prismalang";
+import { editor } from "monaco-editor";
 
 export default function EditorPanel() {
   const { schema, setSchema } = useSchemaStore();
+  const editorRef = useRef<any>(null);
+  let timeout: any;
+
+  async function validateSchema(value: string) {
+    const res = await fetch("/api/parse-prisma", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ schema: value }),
+    });
+
+    const data = await res.json();
+
+    const monaco = await import("monaco-editor");
+    const model = editorRef.current.getModel();
+
+    console.log("Markers:", data.error);
+    if (data.error) {
+      editorRef.current.revealLine(data.error[0].startLineNumber);
+      monaco.editor.setModelMarkers(model, "prisma", data.error);
+    } else {
+      monaco.editor.setModelMarkers(model, "prisma", []);
+    }
+  }
+
+  async function debouncedValidate(value: string) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => validateSchema(value), 500);
+  }
 
   const monaco = useMonaco();
   useEffect(() => {
@@ -30,7 +61,14 @@ export default function EditorPanel() {
       language="prisma"
       theme="vs-dark"
       value={schema}
-      onChange={(v) => setSchema(v ?? "")}
+      onMount={(editor) => (editorRef.current = editor)}
+      onChange={(v) => {
+        const value = v || "";
+        setSchema(value);
+
+        //debounce validation
+        debouncedValidate(value);
+      }}
       options={{
         minimap: { enabled: false },
         fontSize: 18,

@@ -1,4 +1,5 @@
 import type { languages } from "monaco-editor";
+import { start } from "repl";
 
 export const config: languages.LanguageConfiguration = {
   comments: { lineComment: "//" },
@@ -120,3 +121,37 @@ export const language: languages.IMonarchLanguage = {
     ],
   },
 };
+
+export function parsePrismaError(message: string) {
+  const diagnose = []
+
+  const regex = /schema\.prisma:(\d+):(\d+) - (Error|Warning|Info): (.+)/g
+  let match
+
+  while ((match = regex.exec(message)) !== null) {
+    const line = Number(match[1])
+    const column = Number(match[2] ?? 1)
+
+    diagnose.push({
+      startLineNumber: line,
+      startColumn: column,
+      endLineNumber: line,
+      endColumn: column + 1,
+      message,
+      severity: 8 // Monaco.MarkerSeverity.Error
+    })
+  }
+
+  if (diagnose.length === 0) {
+    diagnose.push({
+      startLineNumber: 1,
+      startColumn: 1,
+      endLineNumber: 1,
+      endColumn: 1,
+      message,
+      servity: 8 // Monaco.MarkerSeverity.Error
+    })
+  }
+
+  return diagnose
+}
