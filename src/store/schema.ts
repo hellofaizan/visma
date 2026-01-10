@@ -1,39 +1,39 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 export const useSchemaStore = create<{
-  schema: string
-  setSchema: (s: string) => void
+  schema: string;
+  setSchema: (s: string) => void;
 }>((set) => ({
   schema: `datasource db {
     provider = "postgresql"
-  }
-  
-  generator client {
+}
+
+generator client {
     provider = "prisma-client-js"
-  }
-  
-  model User {
-    id Int @id @default(autoincrement())
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
-    email String @unique
-    name String?
-    role Role @default(USER)
-    posts Post[]
-  }
-  
-  model Post {
-    id Int @id @default(autoincrement())
+    email     String   @unique
+    name      String?
+    role      Role     @default(USER)
+    posts     Post[]
+}
+
+model Post {
+    id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    published Boolean @default(false)
-    title String @db.VarChar(255)
-    author User? @relation(fields: [authorId], references: [id])
-    authorId Int?
-  }
-  
-  enum Role {
+    published Boolean  @default(false)
+    title     String   @db.VarChar(255)
+    author    User?    @relation(fields: [authorId], references: [id])
+    authorId  Int?
+}
+
+enum Role {
     USER
     ADMIN
-  }`,
+}`,
   setSchema: (schema) => set({ schema }),
-}))
+}));

@@ -1,10 +1,27 @@
 "use client";
 
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { useSchemaStore } from "@/store/schema";
+import { useEffect } from "react";
+import * as prismaLanguage from "./prismalang";
 
 export default function EditorPanel() {
   const { schema, setSchema } = useSchemaStore();
+
+  const monaco = useMonaco();
+  useEffect(() => {
+    if (monaco) {
+      monaco.languages.register({ id: "prisma" });
+      monaco.languages.setLanguageConfiguration(
+        "prisma",
+        prismaLanguage.config
+      );
+      monaco.languages.setMonarchTokensProvider(
+        "prisma",
+        prismaLanguage.language
+      );
+    }
+  }, [monaco]);
 
   return (
     <Editor
