@@ -1,4 +1,4 @@
-import DiagramPanel from "@/components/DIagramPanel";
+import DiagramPanel from "@/components/DiagramPanel";
 import EditorPanel from "@/components/EditorPanel"; 
 
 export default function Home() {
