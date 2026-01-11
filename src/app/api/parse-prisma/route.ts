@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   const { schema } = await req.json();
 
   try {
-    // Lazy import so Prisma internals doesn’t get bundled
     const { getDMMF } = await import("@prisma/internals");
 
     const dmmf = await getDMMF({ datamodel: schema });
@@ -28,6 +27,58 @@ export async function POST(req: Request) {
       position: { x: i * 300, y: 400 },
       data: enm,
     }));
+
+    type RelationSide = {
+      model: string;
+      field: string;
+      isList: boolean;
+      isRequired: boolean;
+      relationFromFields: readonly string[] | undefined;
+    };
+
+    const relationMap = new Map<string, RelationSide[]>();
+
+    for (const model of dmmf.datamodel.models) {
+      for (const field of model.fields) {
+        if (field.relationName) {
+          if (!relationMap.has(field.relationName)) {
+            relationMap.set(field.relationName, []);
+          }
+
+          relationMap.get(field.relationName)!.push({
+            model: model.name,
+            field: field.name,
+            isList: field.isList,
+            isRequired: field.isRequired,
+            relationFromFields: field.relationFromFields,
+          });
+        }
+      }
+    }
+
+    const relationEdges = [];
+    for (const [relationName, sides] of relationMap.entries()) {
+      if (sides.length !== 2) continue;
+
+      const owning = sides.find(
+        (s) => s.relationFromFields && s.relationFromFields.length > 0
+      );
+
+      const inverse = sides.find(
+        (s) => !s.relationFromFields || s.relationFromFields.length === 0
+      );
+
+      if (!owning || !inverse) continue;
+
+      relationEdges.push({
+        id: `rel-${relationName}`,
+        source: owning.model,
+        sourceHandle: `field-${owning.field}`,
+        target: inverse.model,
+        type: "smoothstep",
+        label: formatCardinality(owning, inverse),
+      });
+    }
 
     const edges: any = [];
     for (const model of dmmf.datamodel.models) {
@@ -55,9 +106,18 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ nodes: [...nodes, ...enumNodes], edges });
+    return NextResponse.json({
+      nodes: [...nodes, ...enumNodes],
+      edges: [...relationEdges, ...edges],
+    });
   } catch (e: any) {
     const diagnose = parsePrismaError(e.message);
     return NextResponse.json({ error: diagnose }, { status: 500 });
   }
+}
+
+function formatCardinality(a: any, b: any) {
+  const left = a.isList ? "N" : a.isRequired ? "1" : "0..1";
+  const right = b.isList ? "N" : b.isRequired ? "1" : "0..1";
+  return `${left} ↔ ${right}`;
 }

@@ -149,7 +149,7 @@ export function parsePrismaError(message: string) {
       endLineNumber: 1,
       endColumn: 1,
       message,
-      servity: 8 // Monaco.MarkerSeverity.Error
+      serveity: 8 // Monaco.MarkerSeverity.Error
     })
   }
 

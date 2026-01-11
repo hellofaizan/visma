@@ -1,6 +1,7 @@
 import { Handle, Position } from "reactflow";
 
 export default function ModelNode({ data }: { data: any }) {
+
   function formatType(field: any) {
     let type = field.type;
 
@@ -28,7 +29,7 @@ export default function ModelNode({ data }: { data: any }) {
 
     return attr.join(" ");
   }
-  console.log("model data", data);
+  
   return (
     <div className="rounded-md shadow border bg-background/45 border-zinc-600 text-sm min-w-96 overflow-hidden">
       <div className="font-bold text-center py-1 border-b-[0.5px] border-zinc-600 bg-background/60">
@@ -44,13 +45,26 @@ export default function ModelNode({ data }: { data: any }) {
             >
               {(field.relationName || field.kind === "enum") && (
                 <Handle
-                  type="source"
+                  type="target"
                   position={Position.Left}
-                  id={`field-${field.name}`}
+                  id={`target-${field.name}`}
                   style={{
                     top: "50%",
                     left: 0,
                     transform: "translate(-50%)",
+                  }}
+                />
+              )}
+
+              {field.relationName && (
+                <Handle
+                  type="source"
+                  position={Position.Right}
+                  id={`source-${field.name}`}
+                  style={{
+                    top: "50%",
+                    right: -6,
+                    transform: "translateY(-50%)",
                   }}
                 />
               )}

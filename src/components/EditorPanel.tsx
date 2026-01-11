@@ -4,12 +4,11 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { useSchemaStore } from "@/store/schema";
 import { useEffect, useRef } from "react";
 import * as prismaLanguage from "../lib/prismalang";
-import { editor } from "monaco-editor";
 
 export default function EditorPanel() {
   const { schema, setSchema } = useSchemaStore();
   const editorRef = useRef<any>(null);
-  let timeout: any;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   async function validateSchema(value: string) {
     const res = await fetch("/api/parse-prisma", {
@@ -25,19 +24,32 @@ export default function EditorPanel() {
     const monaco = await import("monaco-editor");
     const model = editorRef.current.getModel();
 
-    console.log("Markers:", data.error);
-    if (data.error) {
-      editorRef.current.revealLine(data.error[0].startLineNumber);
-      monaco.editor.setModelMarkers(model, "prisma", data.error);
-    } else {
-      monaco.editor.setModelMarkers(model, "prisma", []);
+    if (model) {
+      if (data.error) {
+        editorRef.current.revealLine(data.error[0].startLineNumber);
+        monaco.editor.setModelMarkers(model, "prisma", data.error);
+      } else {
+        monaco.editor.setModelMarkers(model, "prisma", []);
+      }
     }
   }
 
   async function debouncedValidate(value: string) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => validateSchema(value), 500);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      validateSchema(value);
+    });
   }
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const monaco = useMonaco();
   useEffect(() => {
@@ -66,7 +78,6 @@ export default function EditorPanel() {
         const value = v || "";
         setSchema(value);
 
-        //debounce validation
         debouncedValidate(value);
       }}
       options={{
@@ -77,7 +88,7 @@ export default function EditorPanel() {
         lineNumbers: "on", //off, //relative, //on,
         automaticLayout: true,
         lineNumbersMinChars: 3,
-        folding: false, // function folding
+        folding: true, // function folding
         wordWrap: "on",
         scrollbar: {
           vertical: "auto", //hidden
