@@ -17,44 +17,64 @@ import { useSchemaStore } from "@/store/schema";
 import ModelNode from "./nodes/ModelNode";
 import EnumNode from "./nodes/EnumNode";
 import { applyDagreLayout } from "./layout/dagreLayout";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const nodeTypes = { modelNode: ModelNode, enumNode: EnumNode };
 
-export default function DiagramPanel() {
+function DiagramContent() {
   const { schema } = useSchemaStore();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const layoutDone = useRef(false);
 
   useEffect(() => {
     const parse = async () => {
-      const res = await fetch("/api/parse-prisma", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ schema }),
-      });
-
-      const data = await res.json();
-
-      let newNodes = data.nodes;
-      const newEdges = data.edges;
-
-      if (!layoutDone.current) {
-        newNodes = applyDagreLayout(newNodes, newEdges, "LR");
-        layoutDone.current = true;
-      } else {
-        newNodes = newNodes.map((n: any) => {
-          const existing = nodes.find((e: any) => e.id === n.id);
-          return existing ? { ...n, position: (existing as any).position } : n;
+      try {
+        setError(null);
+        const res = await fetch("/api/parse-prisma", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ schema }),
         });
-      }
 
-      setNodes(newNodes);
-      setEdges(newEdges);
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(
+            errorData.error?.[0]?.message || "Failed to parse schema"
+          );
+        }
+
+        const data = await res.json();
+
+        if (data.error) {
+          setError(data.error[0]?.message || "Schema parsing error");
+          return;
+        }
+
+        let newNodes = data.nodes || [];
+        const newEdges = data.edges || [];
+
+        if (!layoutDone.current) {
+          newNodes = applyDagreLayout(newNodes, newEdges, "LR");
+          layoutDone.current = true;
+        } else {
+          newNodes = newNodes.map((n: any) => {
+            const existing = nodes.find((e: any) => e.id === n.id);
+            return existing ? { ...n, position: (existing as any).position } : n;
+          });
+        }
+
+        setNodes(newNodes);
+        setEdges(newEdges);
+      } catch (err: any) {
+        setError(err.message || "An error occurred while parsing the schema");
+        console.error("Schema parsing error:", err);
+      }
     };
     parse();
   }, [schema]);
@@ -94,6 +114,25 @@ export default function DiagramPanel() {
     });
   }, [edges, hoveredNode]);
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full bg-[#1e1e1e] p-8">
+        <div className="max-w-md w-full bg-[#2a2a2a] border border-yellow-500 rounded-lg p-6">
+          <h2 className="text-xl font-bold text-yellow-400 mb-4">
+            Schema Error
+          </h2>
+          <p className="mb-4">{error}</p>
+          <button
+            onClick={() => setError(null)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ReactFlow
       nodes={nodes.map((node: any) => ({
@@ -117,5 +156,13 @@ export default function DiagramPanel() {
       <Background size={1} />
       <Controls />
     </ReactFlow>
+  );
+}
+
+export default function DiagramPanel() {
+  return (
+    <ErrorBoundary>
+      <DiagramContent />
+    </ErrorBoundary>
   );
 }
