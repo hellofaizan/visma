@@ -1,4 +1,4 @@
-import DiagramPanel from "@/components/DiagramPanel";
+import DiagramPanel from "@/components/DIagramPanel";
 import EditorPanel from "@/components/EditorPanel";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
