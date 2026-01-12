@@ -73,8 +73,9 @@ export async function POST(req: Request) {
       relationEdges.push({
         id: `rel-${relationName}`,
         source: owning.model,
-        sourceHandle: `field-${owning.field}`,
+        sourceHandle: `source-${owning.field}`,
         target: inverse.model,
+        targetHandle: `target-${inverse.field}`,
         type: "smoothstep",
         label: formatCardinality(owning, inverse),
       });
@@ -87,19 +88,9 @@ export async function POST(req: Request) {
           edges.push({
             id: `${model.name}-${field.name}-enum`,
             source: model.name,
-            sourceHandle: `field-${field.name}`,
+            sourceHandle: `source-${field.name}`,
             target: field.type,
             targetHandle: "enum-bottom",
-            type: "smoothstep",
-          });
-        }
-
-        if (field.relationName) {
-          edges.push({
-            id: `${model.name}-${field.name}-rel`,
-            source: model.name,
-            sourceHandle: `field-${field.name}`,
-            target: field.type,
             type: "smoothstep",
           });
         }

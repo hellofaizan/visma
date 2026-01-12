@@ -1,7 +1,6 @@
 import { Handle, Position } from "reactflow";
 
 export default function ModelNode({ data }: { data: any }) {
-
   function formatType(field: any) {
     let type = field.type;
 
@@ -29,7 +28,7 @@ export default function ModelNode({ data }: { data: any }) {
 
     return attr.join(" ");
   }
-  
+
   return (
     <div className="rounded-md shadow border bg-background/45 border-zinc-600 text-sm min-w-96 overflow-hidden">
       <div className="font-bold text-center py-1 border-b-[0.5px] border-zinc-600 bg-background/60">
@@ -43,7 +42,20 @@ export default function ModelNode({ data }: { data: any }) {
               className="grid grid-cols-[0.5fr_0.5fr_0.5fr] px-2 py-1"
               key={index}
             >
-              {(field.relationName || field.kind === "enum") && (
+              {field.kind === "enum" && (
+                  <Handle
+                    type="source"
+                    position={Position.Right}
+                    id={`source-${field.name}`}
+                    style={{
+                      top: "50%",
+                      right: 0,
+                      transform: "translate(-50%)",
+                    }}
+                  />
+                )}
+
+              {field.relationName && !field.relationFromFields?.length && (
                 <Handle
                   type="target"
                   position={Position.Left}
@@ -56,18 +68,20 @@ export default function ModelNode({ data }: { data: any }) {
                 />
               )}
 
-              {field.relationName && (
-                <Handle
-                  type="source"
-                  position={Position.Right}
-                  id={`source-${field.name}`}
-                  style={{
-                    top: "50%",
-                    right: -6,
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
+              {field.relationName &&
+                field.relationFromFields &&
+                field.relationFromFields.length > 0 && (
+                  <Handle
+                    type="source"
+                    position={Position.Right}
+                    id={`source-${field.name}`}
+                    style={{
+                      top: "50%",
+                      right: -6,
+                      transform: "translateY(-50%)",
+                    }}
+                  />
+                )}
               <div className="font-medium">{field.name}</div>
               <div className="">{formatType(field)}</div>
               <div className="text-right">{formatAttributes(field)}</div>
