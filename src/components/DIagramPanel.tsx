@@ -17,7 +17,7 @@ import { useSchemaStore } from "@/store/schema";
 import ModelNode from "./nodes/ModelNode";
 import EnumNode from "./nodes/EnumNode";
 import { applyDagreLayout } from "./layout/dagreLayout";
-import { ErrorBoundary } from "./ErrorBoundary";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const nodeTypes = { modelNode: ModelNode, enumNode: EnumNode };
 
