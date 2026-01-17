@@ -65,7 +65,7 @@ export default function EditorPanel() {
             </Link>
             <button
               onClick={triggerRefresh}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors cursor-pointer"
             >
               Convert to Diagram
             </button>
