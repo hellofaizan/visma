@@ -32,7 +32,7 @@ export default function EditorPanel() {
   }, [monaco]);
 
   return (
-    <div className="flex flex-col h-screen border-r-2 border-r-[#333333]">
+    <div className="flex flex-col h-screen">
       <div className="h-[60px] bg-[#252526] border-t border-[#333333] flex items-center justify-center px-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
