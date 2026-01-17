@@ -3,6 +3,8 @@ import { create } from "zustand";
 export const useSchemaStore = create<{
   schema: string;
   setSchema: (s: string) => void;
+  refreshTrigger: number;
+  triggerRefresh: () => void;
 }>((set) => ({
   schema: `datasource db {
     provider = "postgresql"
@@ -36,4 +38,6 @@ enum Role {
     ADMIN
 }`,
   setSchema: (schema) => set({ schema }),
+  refreshTrigger: 0,
+  triggerRefresh: () => set((state) => ({ refreshTrigger: state.refreshTrigger + 1 })),
 }));

@@ -22,13 +22,15 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 const nodeTypes = { modelNode: ModelNode, enumNode: EnumNode };
 
 function DiagramContent() {
-  const { schema } = useSchemaStore();
+  const { schema, refreshTrigger } = useSchemaStore();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const layoutDone = useRef(false);
+  const hasInitialized = useRef(false);
+  const lastRefreshTrigger = useRef(0);
 
   useEffect(() => {
     const parse = async () => {
@@ -59,6 +61,13 @@ function DiagramContent() {
         let newNodes = data.nodes || [];
         const newEdges = data.edges || [];
 
+        // Reset layout when refresh is triggered (button clicked)
+        const shouldResetLayout = refreshTrigger !== lastRefreshTrigger.current && refreshTrigger > 0;
+        if (shouldResetLayout) {
+          layoutDone.current = false;
+          lastRefreshTrigger.current = refreshTrigger;
+        }
+
         if (!layoutDone.current) {
           newNodes = applyDagreLayout(newNodes, newEdges, "LR");
           layoutDone.current = true;
@@ -76,8 +85,18 @@ function DiagramContent() {
         console.error("Schema parsing error:", err);
       }
     };
-    parse();
-  }, [schema]);
+    
+    // Parse on initial mount OR when refreshTrigger changes (button clicked)
+    const isInitialMount = !hasInitialized.current;
+    const isButtonClick = refreshTrigger !== lastRefreshTrigger.current && refreshTrigger > 0;
+    
+    if (isInitialMount || isButtonClick) {
+      if (isInitialMount) {
+        hasInitialized.current = true;
+      }
+      parse();
+    }
+  }, [refreshTrigger, schema]);
 
   const onNodeChange = (changes: NodeChange[]) => {
     setNodes((mds) => applyNodeChanges(changes, mds));

@@ -10,6 +10,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@prisma/internals": "^7.2.0",
+    "@tabler/icons-react": "^3.36.1",
     "dagre": "^0.8.5",
     "html-to-image": "^1.11.13",
     "monaco-editor": "^0.55.1",
