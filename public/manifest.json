@@ -1,0 +1,20 @@
+{
+  "name": "Visma - Prisma Schema Visualizer",
+  "short_name": "Visma",
+  "description": "Free online tool to visualize Prisma database schemas as interactive diagrams. Generate ER diagrams and understand database relationships.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1e1e",
+  "theme_color": "#1e1e1e",
+  "orientation": "landscape-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["developer", "productivity", "utilities"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

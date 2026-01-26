@@ -1,14 +1,16 @@
-# Visma - Prisma Schema Visualizer
+# Visma - Prisma Schema Visualizer | Free Online Database Diagram Tool
 
 > **Visualize your Prisma database schemas as beautiful, interactive diagrams**
 
-Visma is a web-based tool that transforms your Prisma schema code into visual database diagrams. Write your Prisma schema on the left, and watch it come to life as an interactive diagram on the right. Perfect for understanding database relationships, sharing schemas with your team, or learning Prisma.
+Visma is a free, open-source web-based tool that transforms your Prisma schema code into visual database diagrams. Write your Prisma schema on the left, and watch it come to life as an interactive diagram on the right. Perfect for understanding database relationships, sharing schemas with your team, or learning Prisma. Create ER diagrams, visualize database schemas, and generate database documentation effortlessly.
 
-![Visma Preview](https://flavortown.hackclub.com/rails/active_storage/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Njc0NTYsInB1ciI6ImJsb2JfaWQifX0=--2721e7d956a5ab11f8a7bb08523d942ce836341a/ChatGPT%20Image%20Jan%2015,%202026,%2010_44_44%20PM.png)
+![Visma Preview - Prisma Schema Visualizer showing interactive database diagram with models, relationships, and enums](https://flavortown.hackclub.com/rails/active_storage/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Njc0NTYsInB1ciI6ImJsb2JfaWQifX0=--2721e7d956a5ab11f8a7bb08523d942ce836341a/ChatGPT%20Image%20Jan%2015,%202026,%2010_44_44%20PM.png)
 
 ## ✨ What is Visma?
 
-Have you ever looked at a Prisma schema file and wished you could see how all your database tables connect? Visma does exactly that! It's like having a visual map of your database structure.
+Visma is a powerful **Prisma schema visualizer** and **database diagram generator** that helps developers understand and visualize their database structures. Have you ever looked at a Prisma schema file and wished you could see how all your database tables connect? Visma does exactly that! It's like having a visual map of your database structure.
+
+**Keywords:** Prisma visualizer, database diagram tool, ER diagram generator, schema visualization, Prisma schema viewer, database relationship mapper, free diagram tool, online database designer, Prisma ORM visualizer, database schema generator
 
 **For Developers:**
 - Quickly understand complex database relationships
@@ -23,14 +25,17 @@ Have you ever looked at a Prisma schema file and wished you could see how all yo
 
 ## 🚀 Features
 
-- **📝 Live Code Editor** - Write and edit Prisma schemas with syntax highlighting
-- **🎨 Interactive Diagrams** - Beautiful, draggable node-based visualizations
-- **🔗 Relationship Mapping** - See how your models connect with labeled relationships
-- **📊 Automatic Layout** - Smart positioning of models and enums
+- **📝 Live Code Editor** - Write and edit Prisma schemas with syntax highlighting powered by Monaco Editor (VS Code engine)
+- **🎨 Interactive Diagrams** - Beautiful, draggable node-based visualizations with React Flow
+- **🔗 Relationship Mapping** - See how your models connect with labeled relationships (one-to-one, one-to-many, many-to-many)
+- **📊 Automatic Layout** - Smart positioning of models and enums using Dagre graph layout algorithm
 - **🔄 Real-time Updates** - Click "Convert to Diagram" to see your changes instantly
-- **📏 Resizable Panels** - Drag the divider to adjust editor and diagram sizes
-- **✅ Schema Validation** - Get instant feedback on your Prisma schema syntax
-- **🎯 Hover Highlights** - Hover over nodes to see their connections light up
+- **📏 Resizable Panels** - Drag the divider to adjust editor and diagram sizes for optimal workflow
+- **✅ Schema Validation** - Get instant feedback on your Prisma schema syntax errors
+- **🎯 Hover Highlights** - Hover over nodes to see their connections light up for better understanding
+- **🆓 100% Free** - No signup required, no credit card needed, completely open-source
+- **🌐 Browser-Based** - Works entirely in your browser, no installation required
+- **📱 Responsive Design** - Works on desktop and tablet devices
 
 ## 🎯 Quick Start
 
@@ -116,9 +121,9 @@ visma/
 └── package.json          # Dependencies and scripts
 ```
 
-## 🎨 Example Schema
+## 🎨 Example Prisma Schema
 
-Here's a sample Prisma schema you can try:
+Here's a sample Prisma schema you can try to visualize database relationships:
 
 ```prisma
 model User {
@@ -183,6 +188,20 @@ Please feel free to open an issue or submit a pull request.
 ## 📄 License
 
 This project is open source. Check the repository for license details.
+
+## 🔍 SEO & Discoverability
+
+**Search Terms:** Prisma visualizer, database diagram tool, ER diagram generator, schema visualization, Prisma schema viewer, database relationship mapper, free diagram tool, online database designer, Prisma ORM visualizer, database schema generator, Prisma ERD, Prisma schema diagram, visualize Prisma schema, database visualization tool, entity relationship diagram, database design tool, Prisma model visualizer, database structure viewer, schema diagram generator, Prisma database diagram
+
+**Use Cases:**
+- Visualize Prisma schemas for documentation
+- Understand complex database relationships
+- Generate ER diagrams from Prisma schema files
+- Share database structures with team members
+- Learn Prisma ORM and database design
+- Create database documentation automatically
+- Validate Prisma schema syntax
+- Design database schemas visually
 
 ## 🙏 Acknowledgments
 

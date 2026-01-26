@@ -2,6 +2,38 @@
   "name": "visma",
   "version": "0.1.0",
   "private": true,
+  "description": "Free online Prisma schema visualizer and database diagram tool. Generate ER diagrams, visualize database relationships, and create database documentation.",
+  "keywords": [
+    "prisma",
+    "visualizer",
+    "database",
+    "diagram",
+    "tool",
+    "er-diagram",
+    "schema",
+    "visualization",
+    "prisma-schema",
+    "database-design",
+    "orm",
+    "entity-relationship",
+    "database-diagram",
+    "schema-viewer",
+    "prisma-visualizer",
+    "database-visualization",
+    "free-tool",
+    "online-tool",
+    "developer-tools"
+  ],
+  "author": "Mohammad Faizan <https://mohammadfaizan.com>",
+  "homepage": "https://github.com/hellofaizan/visma#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hellofaizan/visma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hellofaizan/visma/issues"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
